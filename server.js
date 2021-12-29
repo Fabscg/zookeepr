@@ -1,4 +1,8 @@
 const express = require('express') 
+<<<<<<< HEAD
+=======
+const PORT = process.env.PORT || 3001
+>>>>>>> feature/MVP
 const app = express()
 const { animals} = require('./data/animals')
 
@@ -50,6 +54,16 @@ app.get('/api/animals', (req, res) => {
    res.json(results)
 })
 
+<<<<<<< HEAD
 app.listen(3001, () => {
     console.log('API server now on port 3001');
+=======
+app.get('./api/animals/:id', (req, res) => {
+  const result = findById(req.params.id, animals);
+  res.json(result)
+})
+
+app.listen(PORT, () => {
+    console.log(`API server now on port ${PORT}!`);
+>>>>>>> feature/MVP
 })
