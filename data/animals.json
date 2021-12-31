@@ -135,6 +135,15 @@
         "loving"
       ],
       "id": "13"
+    },
+    {
+      "name": "Kacper",
+      "species": "cat",
+      "diet": "piscivore",
+      "personalityTraits": [
+        "loving"
+      ],
+      "id": "14"
     }
   ]
 }
