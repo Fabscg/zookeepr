@@ -1,38 +1,83 @@
-const router = require("express").Router();
+const fs = require("fs");
 const {
   filterByQuery,
   findById,
   createNewZookeeper,
   validateZookeeper,
-} = require("../../lib/zookeepers");
-const { zookeepers } = require("../../data/zookeepers");
+} = require("../lib/zookeepers.js");
+const { zookeepers } = require("../data/zookeepers");
 
-router.get("/zookeepers", (req, res) => {
-  let results = zookeepers;
-  if (req.query) {
-    results = filterByQuery(req.query, results);
-  }
-  res.json(results);
+jest.mock("fs");
+test("creates an zookeeper object", () => {
+  const zookeeper = createNewZookeeper(
+    { name: "Darlene", id: "jhgdja3ng2" },
+    zookeepers
+  );
+
+  expect(zookeeper.name).toBe("Darlene");
+  expect(zookeeper.id).toBe("jhgdja3ng2");
 });
 
-router.get("/zookeepers/:id", (req, res) => {
-  const result = findById(req.params.id, zookeepers);
-  if (result) {
-    res.json(result);
-  } else {
-    res.send(404);
-  }
+test("filters by query", () => {
+  const startingZookeepers = [
+    {
+      id: "2",
+      name: "Raksha",
+      age: 31,
+      favoriteAnimal: "penguin",
+    },
+    {
+      id: "3",
+      name: "Isabella",
+      age: 67,
+      favoriteAnimal: "bear",
+    },
+  ];
+
+  const updatedZookeepers = filterByQuery({ age: 31 }, startingZookeepers);
+
+  expect(updatedZookeepers.length).toEqual(1);
 });
 
-router.post("/zookeepers", (req, res) => {
-  req.body.id = zookeepers.length.toString();
+test("finds by id", () => {
+  const startingZookeepers = [
+    {
+      id: "2",
+      name: "Raksha",
+      age: 31,
+      favoriteAnimal: "penguin",
+    },
+    {
+      id: "3",
+      name: "Isabella",
+      age: 67,
+      favoriteAnimal: "bear",
+    },
+  ];
 
-  if (!validateZookeeper(req.body)) {
-    res.status(400).send("The zookeeper is not properly formatted.");
-  } else {
-    const zookeeper = createNewZookeeper(req.body, zookeepers);
-    res.json(zookeeper);
-  }
+  const result = findById("3", startingZookeepers);
+
+  expect(result.name).toBe("Isabella");
 });
 
-module.exports = router;
+test("validates age", () => {
+  const zookeeper = {
+    id: "2",
+    name: "Raksha",
+    age: 31,
+    favoriteAnimal: "penguin",
+  };
+
+  const invalidZookeeper = {
+    id: "3",
+    name: "Isabella",
+    age: "67",
+    favoriteAnimal: "bear",
+  };
+
+  const result = validateZookeeper(zookeeper);
+  const result2 = validateZookeeper(invalidZookeeper);
+
+  expect(result).toBe(true);
+  expect(result2).toBe(false);
+});
