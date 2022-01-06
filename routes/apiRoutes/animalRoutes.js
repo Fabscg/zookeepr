@@ -1,7 +1,7 @@
 
 const router = require('express').Router();
 const { filterByQuery, findById, createNewAnimal, validateAnimal } = require('../../lib/animals');
-const { animals } = require('../../lib/animals');
+const { animals } = require('../../data/animals');
 
 
 router.get('/animals', (req, res) => {
